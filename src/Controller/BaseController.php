@@ -12,9 +12,4 @@ class BaseController
         $this->model = $model;
         $this->view = $view;
     }
-    
-    public function handleRequest()
-    {
-        
-    }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class UserController
+class UserController extends BaseController
 {
     private $model;
     private $view;
@@ -11,6 +11,12 @@ class UserController
     {
         $this->model = $model;
         $this->view = $view;
+    }
+
+    private function createSession($userData)
+    {
+        $_SESSION['user_id'] = $userData['id'];
+        $_SESSION['full_name'] = $userData['full_name'];
     }
 
     public function handleRegister()
@@ -48,9 +54,7 @@ class UserController
 
             // Call the model to register the user
             $registeredUser = $this->model->registerUser($fullName, $formattedCpf, $email, $password);
-
-            $_SESSION['user_id'] = $registeredUser['id'];
-            $_SESSION['full_name'] = $registeredUser['full_name'];
+            $this->createSession($registeredUser);
 
             header('Location: /');
             exit;
@@ -78,9 +82,8 @@ class UserController
             $loggedInUser = $this->model->loginUser($email, $password);
 
             if ($loggedInUser) {
-                $_SESSION['user_id'] = $loggedInUser['id'];
-                $_SESSION['full_name'] = $loggedInUser['full_name'];
-
+                $this->createSession($loggedInUser);
+                
                 header('Location: /');
                 exit;
             } else {
@@ -99,11 +102,11 @@ class UserController
         $_SESSION = array();
 
         // Destroy the session cookie
-        if (ini_get("session.use_cookies")) {
+        if (ini_get('session.use_cookies')) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
+                $params['path'], $params['domain'],
+                $params['secure'], $params['httponly']
             );
         }
 
@@ -111,7 +114,7 @@ class UserController
         session_destroy();
         
         // Redirect to the home page
-        header("Location: /");
-        exit();
+        header('Location: /');
+        exit;
     }
 }

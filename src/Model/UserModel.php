@@ -32,13 +32,11 @@ class UserModel extends BaseModel
             ':email' => $email,
         ]);
 
-        if ($result && password_verify($password, $result['hashed_password'])) {
-            // User authenticated successfully
+        // User authenticated successfully
+        if ($result && password_verify($password, $result['hashed_password']))
             return $result;
-        } else {
-            // Authentication failed
-            return null;
-        }
+
+        return null;
     }
 
     public function getUser($userId)

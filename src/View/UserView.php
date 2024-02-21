@@ -21,7 +21,7 @@ class UserView extends BaseView
         
         echo '<div class="mb-4">';
         echo '<label for="cpf" class="block text-gray-600 mb-2">CPF</label>';
-        echo '<input type="text" id="cpf" name="cpf" placeholder="123.456.789-00" class="w-full p-3 border rounded-md" />';
+        echo '<input type="text" id="cpf" name="cpf" placeholder="123.456.789-00" class="w-full p-3 border rounded-md" required pattern="\d{11}" oninput="formatCPF()" />';
         echo '</div>';
         
         echo '<div class="mb-4">';
@@ -50,6 +50,16 @@ class UserView extends BaseView
         
         echo '</form>';
         echo '</div>';
+
+        echo '<script>';
+        echo 'function formatCPF() {';
+        echo 'const cpfInput = document.getElementById("cpf");';
+        echo 'let cpf = cpfInput.value.replace(/\D/g, "");';
+        echo 'if (cpf.length > 11) cpf = cpf.slice(0, 11);';
+        echo 'cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");';
+        echo 'cpfInput.value = cpf;';
+        echo '}';
+        echo '</script>';
     }
 
     public function renderLoginForm($error = '')
